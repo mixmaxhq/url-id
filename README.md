@@ -3,6 +3,15 @@ url-id
 
 A utility for encoding and parsing tiny, url-safe objects of identifiers
 
+Install
+-------
+
+```sh
+$ yarn add @mixmaxhq/url-id
+# or
+$ npm install @mixmaxhq/url-id
+```
+
 Usage
 -----
 
@@ -61,3 +70,8 @@ Buffer.from(JSON.stringify(exampleData)).toString('base64');
 // eyJ0eXBlIjoiZ21haWxNZXNzYWdlSWQiLCJ1c2VySWQiOiI3NjQ1Njc4OTk3NiIsImdtYWlsTWVzc2FnZUlkIjoic29tZSBpZCBoZXJlIChmdWxsIHVuaWNvZGUpIn0=
 // (length: 128)
 ```
+
+License
+-------
+
+[The MIT License](https://github.com/mixmaxhq/url-id/blob/master/LICENSE)
