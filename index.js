@@ -295,7 +295,7 @@ class Encoder {
       }
     }
 
-    throw new Error(`not matching definition in ${context}`);
+    throw new Error(`no matching definition in ${context}`);
   }
 
   decode(context, string) {
