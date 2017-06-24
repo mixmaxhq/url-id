@@ -30,7 +30,7 @@ class LocalEncoder {
 
   word(value, width=1) {
     if (value >= (1 << (((width << 1) + width) << 1))) {
-      throw new Error('cannot encode ${value} in ${width} base64 characters');
+      throw new Error(`cannot encode ${value} in ${width} base64 characters`);
     }
     let encoded = '';
     for (let i = 0; i < width; ++i) {
