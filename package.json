@@ -1,6 +1,6 @@
 {
   "name": "@mixmaxhq/url-id",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Encode and parse tiny, url-safe objects of identifiers",
   "main": "index.js",
   "scripts": {
