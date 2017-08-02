@@ -261,17 +261,18 @@ class Encoder {
     for (let {type, definition} of ctx.array) {
       const encodeArgs = [data];
       switch (type) {
-      case 'exact':
-        if (data !== definition.match) continue;
-        break;
-      case 'regex':
-        const match = definition.match.exec(data);
-        if (!match) continue;
-        encodeArgs.push(match);
-        break;
-      case 'function':
-        if (!definition.match.call(undefined, data)) continue;
-        break;
+        case 'exact':
+          if (data !== definition.match) continue;
+          break;
+        case 'regex': {
+          const match = definition.match.exec(data);
+          if (!match) continue;
+          encodeArgs.push(match);
+          break;
+        }
+        case 'function':
+          if (!definition.match.call(undefined, data)) continue;
+          break;
       // default fallthrough
       }
       let value;
@@ -310,6 +311,7 @@ class Encoder {
         throw new Error(`unknown context ${context}`);
       }
 
+      const decoder = new LocalDecoder(_decode, string);
       const token = decoder.char();
       if (!ctx.map.has(token)) {
         throw new Error(`unknown token ${token} for context ${context}`);
@@ -318,7 +320,6 @@ class Encoder {
       return ctx.map.get(token).call(decoder);
     };
 
-    const decoder = new LocalDecoder(_decode, string);
 
     return _decode(context);
   }

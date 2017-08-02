@@ -46,6 +46,6 @@ describe('Encoder', function() {
 
     const decoded = encoder.decode(encoded);
 
-    expect(exampleData).to.deep.equal(decoded)
+    expect(exampleData).to.deep.equal(decoded);
   });
 });
