@@ -7,8 +7,6 @@ Install
 -------
 
 ```sh
-$ yarn add @mixmaxhq/url-id
-# or
 $ npm install @mixmaxhq/url-id
 ```
 
