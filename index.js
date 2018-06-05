@@ -299,7 +299,11 @@ class Encoder {
     throw new Error(`no matching definition in ${context}`);
   }
 
-  decode(context, string) {
+  // The no-use-before-define rule is sometimes silly - we know the usage of the decoder instance
+  // will be available in the closure, and that the _decode function will not be called before the
+  // decoder has been created. Don't move the decoder inside the _decode function to "fix" the
+  // problem, as that's semantically different and will break the tests.
+  decode(context, string) { /* eslint-disable no-use-before-define */
     if (arguments.length === 1 || string === undefined) {
       string = context;
       context = this._initialContext;
@@ -311,7 +315,6 @@ class Encoder {
         throw new Error(`unknown context ${context}`);
       }
 
-      const decoder = new LocalDecoder(_decode, string);
       const token = decoder.char();
       if (!ctx.map.has(token)) {
         throw new Error(`unknown token ${token} for context ${context}`);
@@ -320,7 +323,7 @@ class Encoder {
       return ctx.map.get(token).call(decoder);
     };
 
-
+    const decoder = new LocalDecoder(_decode, string);
     return _decode(context);
   }
 }
