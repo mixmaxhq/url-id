@@ -24,12 +24,12 @@ class LocalEncoder {
   }
 
   normalizeBase64(string) {
-    const lookup = {'=': '', '+': '-', '/': '_'};
+    const lookup = { '=': '', '+': '-', '/': '_' };
     return string.replace(/[/+=]/g, (m) => lookup[m]);
   }
 
-  word(value, width=1) {
-    if (value >= (1 << (((width << 1) + width) << 1))) {
+  word(value, width = 1) {
+    if (value >= 1 << (((width << 1) + width) << 1)) {
       throw new Error(`cannot encode ${value} in ${width} base64 characters`);
     }
     let encoded = '';
@@ -40,14 +40,14 @@ class LocalEncoder {
     return encoded;
   }
 
-  blob(buffer, width=2) {
+  blob(buffer, width = 2) {
     if (!Buffer.isBuffer(buffer)) {
       throw new TypeError('base64 requires a buffer');
     }
     return this.word(buffer.length, width) + this.base64(buffer);
   }
 
-  string(string, encoding, width=2) {
+  string(string, encoding, width = 2) {
     return this.blob(Buffer.from(string, encoding), width);
   }
 }
@@ -67,19 +67,19 @@ class LocalDecoder {
 
   _slice(length) {
     this._check(length);
-    return this._input.slice(this._index, this._index += length);
+    return this._input.slice(this._index, (this._index += length));
   }
 
   _normalizeBase64(string) {
-    const pad = (3 - string.length % 3) % 3;
-    return string.replace(/[_-]/g, (m) => m === '_' ? '/' : '+') + '='.repeat(pad);
+    const pad = (3 - (string.length % 3)) % 3;
+    return string.replace(/[_-]/g, (m) => (m === '_' ? '/' : '+')) + '='.repeat(pad);
   }
 
   _fromBase64(string) {
     return Buffer.from(this._normalizeBase64(string), 'base64');
   }
 
-  word(width=1) {
+  word(width = 1) {
     this._check(width);
     let value = 0;
     for (let i = 0; i < width; ++i) {
@@ -94,11 +94,11 @@ class LocalDecoder {
     return this._input[this._index++];
   }
 
-  bytes(bytes, encoding=null) {
-    return this.chars(Math.ceil(bytes * 4 / 3), encoding);
+  bytes(bytes, encoding = null) {
+    return this.chars(Math.ceil((bytes * 4) / 3), encoding);
   }
 
-  chars(chars, encoding=null) {
+  chars(chars, encoding = null) {
     const buf = this._fromBase64(this._slice(chars));
     if (!encoding || encoding === 'buffer') {
       return buf;
@@ -106,21 +106,21 @@ class LocalDecoder {
     return buf.toString(encoding);
   }
 
-  blob(width=2) {
+  blob(width = 2) {
     return this.bytes(this.word(width));
   }
 
-  string(encoding, width=2) {
+  string(encoding, width = 2) {
     return this.blob(width).toString(encoding);
   }
 
-  base64(chars, safe=true) {
+  base64(chars, safe = true) {
     const data = this._slice(chars);
     if (safe) return data;
     return this._normalizeBase64(data);
   }
 
-  decode(context, count=null) {
+  decode(context, count = null) {
     if (!count) {
       return this._decode(context);
     }
@@ -163,13 +163,16 @@ class Encoder {
       throw new Error(`unsupported match type for ${context}`);
     }
 
-    if (definition.token && (typeof definition.token !== 'string' || definition.token.length !== 1)) {
+    if (
+      definition.token &&
+      (typeof definition.token !== 'string' || definition.token.length !== 1)
+    ) {
       throw new Error('unsupported token format');
     }
 
     const ctxObj = {
       type,
-      definition
+      definition,
     };
 
     // TODO: merge consecutive exact string matches.
@@ -177,7 +180,7 @@ class Encoder {
     if (!ctx) {
       ctx = {
         array: [],
-        map: new Map()
+        map: new Map(),
       };
     }
 
@@ -200,12 +203,12 @@ class Encoder {
         throw new Error('no decoders specified');
       }
 
-      for (let [token, decoder] of decode) {
+      for (const [token, decoder] of decode) {
         defineDecode(token, decoder);
       }
     } else if (decode && typeof decode === 'object') {
       let any = false;
-      for (let token in decode) {
+      for (const token in decode) {
         if (hasOwn.call(decode, token)) {
           defineDecode(token, decode[token]);
           any = true;
@@ -237,7 +240,7 @@ class Encoder {
       throw new TypeError('expected array definitions');
     }
 
-    for (let definition of definitions) {
+    for (const definition of definitions) {
       this.define(context, definition);
     }
     return this;
@@ -258,7 +261,7 @@ class Encoder {
       throw new Error(`unknown context ${context}`);
     }
 
-    for (let {type, definition} of ctx.array) {
+    for (const { type, definition } of ctx.array) {
       const encodeArgs = [data];
       switch (type) {
         case 'exact':
@@ -273,7 +276,7 @@ class Encoder {
         case 'function':
           if (!definition.match.call(undefined, data)) continue;
           break;
-      // default fallthrough
+        // default fallthrough
       }
       let value;
       if (!definition.encode) {
@@ -303,7 +306,8 @@ class Encoder {
   // will be available in the closure, and that the _decode function will not be called before the
   // decoder has been created. Don't move the decoder inside the _decode function to "fix" the
   // problem, as that's semantically different and will break the tests.
-  decode(context, string) { /* eslint-disable no-use-before-define */
+  decode(context, string) {
+    /* eslint-disable no-use-before-define */
     if (arguments.length === 1 || string === undefined) {
       string = context;
       context = this._initialContext;
