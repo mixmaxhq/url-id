@@ -16,12 +16,12 @@ describe('Encoder', function() {
       },
       decode() {
         const data = {
-          type: 'gmailMessageId'
+          type: 'gmailMessageId',
         };
 
         [data.userId, data.gmailMessageId] = this.decode('id', 2);
         return data;
-      }
+      },
     });
 
     encoder.define('id', {
@@ -31,18 +31,20 @@ describe('Encoder', function() {
       },
       decode() {
         return this.string('utf8');
-      }
+      },
     });
 
     const exampleData = {
       type: 'gmailMessageId',
       userId: '76456789976',
-      gmailMessageId: 'some id here (full unicode)'
+      gmailMessageId: 'some id here (full unicode)',
     };
 
     const encoded = encoder.encode(exampleData);
 
-    expect(encoded).to.be.a('string').and.to.match(/^[a-z0-9-_]+$/i);
+    expect(encoded)
+      .to.be.a('string')
+      .and.to.match(/^[a-z0-9-_]+$/i);
 
     const decoded = encoder.decode(encoded);
 
