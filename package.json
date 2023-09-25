@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/mixmaxhq/url-id#readme",
   "devDependencies": {
-    "@mixmaxhq/prettier-config": "^1.0.0",
+    "@mixmaxhq/prettier-config": "^1.1.0",
     "chai": "^4.0.2",
     "eslint": "^6.8.0",
     "eslint-config-mixmax": "^4.8.0",
